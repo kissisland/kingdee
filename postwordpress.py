@@ -71,6 +71,50 @@ fenlei_catgory = {
             }
 
 
+fenlei_tags = {
+                'cpa': ['注册会计师', 'cpa'],
+                'cjkjzc': ['初级会计', '初级会计考试', '初级会计考试职称'],
+                'zjkjzc': ['中级会计', '中级会计考试', '中级会计考试职称'],
+                'shuiwushi': ['税务师', '税务师考试'],
+                'cfa': ['CFA', 'CFA考试'],
+                'cma': ['CMA', 'CMA考试'],
+                'acca': ['ACCA', 'ACCA考试'],
+                'qihuocongye': ['期货从业'],
+                'frm': ['FRM', 'FRM考试'],
+                'cia': ['CIA', 'CIA考试'],
+                'zqcy': ['证券从业'],
+                'jijincongye': ['基金从业'],
+                'zjsjs': ['中级审计师'],
+                'zgglkjscj': ['中国管理会计师（初级）'],   # 这里未录入
+                'gjkjzc': ['高级会计', '高级会计职称'],
+                'uscpa': ['USCPA', 'USCPA考试'],
+                'yxcy': ['银行从业'],
+                'jingsuanshi': ['精算师'],
+                'cjsjs': ['初级审计师'],
+                'caia': ['CAIA', 'CAIA考试'],
+                'zcpgs': ['资产评估师'],
+                'zgglkjszj': ['中国管理会计师（中级）'],
+                'cwm': ['CWM', 'CWM考试'],
+                'cima': ['CIMA', 'CIMA考试'],
+                'tongjishi': ['统计师'],
+                'afp': ['AFP', 'AFP考试'],
+                'mpacc': ['MPACC', 'MPACC考试'],
+                'cqf': ['CQF', 'CQF考试'],
+                'rfc': ['RFC', 'RFC考试'],
+                'gjsjs': ['高级审计师'],
+                'aca': ['ACA', 'ACA考试'],
+                'ciia': ['CIIA', 'CIIA考试'],
+                'cfrm': ['CFRM', 'CFRM考试'],
+                'aia': ['AIA', 'AIA考试'],
+                'rfp': ['RFP', 'RFP考试'],
+                'ccsa': ['RFP', 'RFP考试'],
+                'jianadacpa': ['加拿大CPA'],
+                'aozhoucpa': ['澳洲CPA'],
+                'hkicpa': ['HKICPA'],
+                'cfp': ['CFP', 'CFP考试'],
+            }
+
+
 def flush(url):
     res = requests.get(url).text
 
@@ -139,7 +183,7 @@ def push_kuaijiwang():
 
                     newpost.terms_names = {'post_tag': item['tags'].split(",")[:2],  # 文章所属标签，没有则自动创建
                                            'category': fenlei_catgory.get(item['fenlei'])}  # 文章所属分类，没有则自动创建}
-                    time.sleep(random.randint(30, 120))
+                    time.sleep(random.randint(1, 30))
 
                     aid = client.call(posts.NewPost(newpost))
                     if aid:

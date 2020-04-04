@@ -19,6 +19,49 @@ yc_base_url = "https://www.kuaiji.com/yc/"
 
 fenlei_url_list = ['https://www.kuaiji.com/xinwen/', 'https://www.kuaiji.com/kaoshi/', "https://www.kuaiji.com/yc/"]
 
+fenlei_tags = {
+                'cpa': ['注册会计师', 'cpa'],
+                'cjkjzc': ['初级会计', '初级会计考试', '初级会计考试职称'],
+                'zjkjzc': ['中级会计', '中级会计考试', '中级会计考试职称'],
+                'shuiwushi': ['税务师', '税务师考试'],
+                'cfa': ['CFA', 'CFA考试'],
+                'cma': ['CMA', 'CMA考试'],
+                'acca': ['ACCA', 'ACCA考试'],
+                'qihuocongye': ['期货从业'],
+                'frm': ['FRM', 'FRM考试'],
+                'cia': ['CIA', 'CIA考试'],
+                'zqcy': ['证券从业'],
+                'jijincongye': ['基金从业'],
+                'zjsjs': ['中级审计师'],
+                'zgglkjscj': ['中国管理会计师（初级）'],   # 这里未录入
+                'gjkjzc': ['高级会计', '高级会计职称'],
+                'uscpa': ['USCPA', 'USCPA考试'],
+                'yxcy': ['银行从业'],
+                'jingsuanshi': ['精算师'],
+                'cjsjs': ['初级审计师'],
+                'caia': ['CAIA', 'CAIA考试'],
+                'zcpgs': ['资产评估师'],
+                'zgglkjszj': ['中国管理会计师（中级）'],
+                'cwm': ['CWM', 'CWM考试'],
+                'cima': ['CIMA', 'CIMA考试'],
+                'tongjishi': ['统计师'],
+                'afp': ['AFP', 'AFP考试'],
+                'mpacc': ['MPACC', 'MPACC考试'],
+                'cqf': ['CQF', 'CQF考试'],
+                'rfc': ['RFC', 'RFC考试'],
+                'gjsjs': ['高级审计师'],
+                'aca': ['ACA', 'ACA考试'],
+                'ciia': ['CIIA', 'CIIA考试'],
+                'cfrm': ['CFRM', 'CFRM考试'],
+                'aia': ['AIA', 'AIA考试'],
+                'rfp': ['RFP', 'RFP考试'],
+                'ccsa': ['RFP', 'RFP考试'],
+                'jianadacpa': ['加拿大CPA'],
+                'aozhoucpa': ['澳洲CPA'],
+                'hkicpa': ['HKICPA'],
+                'cfp': ['CFP', 'CFP考试'],
+            }
+
 
 def clean_content(content):
     content = re.sub(r'<p[^>]*?>', '', content)
@@ -112,13 +155,18 @@ def get_detail(detailurl, fenlei):
 
         if "违者将被依法追究法律责任" not in content:
 
+            tag = fenlei_tags.get(fenlei, '[]')
+            tag.extend(get_tags(title, content))
+            tag = set(tag)
+            tag = ','.join(tag)
+
             if article.count_documents({'link': detailurl}) <= 0:
                 article.insert_one({
                     'title': title,
                     'content': content,
                     'summay': summary,
                     'link': detailurl,
-                    'tags': get_tags(title, content),
+                    'tags': tag,
                     'status': 0,
                     'fenlei': fenlei
                 })
@@ -131,16 +179,16 @@ def get_detail(detailurl, fenlei):
 
 if __name__ == '__main__':
 
-    get_all_list_data(1, 8)
-
-    # 从列表页中采集文章
-    for item in urllist.find({'status': 0}):
-        try:
-            get_detail(item['link'], item['fenlei'])
-        except Exception as e:
-            print(e)
-        else:
-            urllist.update_one({'_id': item['_id']}, {"$set": {'status': 1}})
+    # get_all_list_data(1, 8)
+    #
+    # # 从列表页中采集文章
+    # for item in urllist.find({'status': 0}):
+    #     try:
+    #         get_detail(item['link'], item['fenlei'])
+    #     except Exception as e:
+    #         print(e)
+    #     else:
+    #         urllist.update_one({'_id': item['_id']}, {"$set": {'status': 1}})
 
     # 查询内容中的分类内容数量
     fenlei_title = Counter([i['fenlei'] for i in article.find({'status': 0})])

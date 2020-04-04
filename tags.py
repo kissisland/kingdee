@@ -14,7 +14,7 @@ def get_tags(title, content):
     data = client.keyword(title, content)
     data = data['items']
     data = [i['tag'] for i in data][:2]
-    data = ','.join(data)
+    # data = ','.join(data)
     return data
 
 
